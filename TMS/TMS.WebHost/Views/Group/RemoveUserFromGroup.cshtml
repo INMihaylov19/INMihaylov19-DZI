@@ -1,0 +1,23 @@
+﻿@model TMS.WebHost.Models.RemoveUserFromGroupVM
+@inject TMS.Services.Contracts.IGroupService groupService
+
+@{
+    var users = await groupService.GetUsersInGroupAsync(Model.Group.GroupId);
+}
+
+<h2>Премахване на потребител</h2>
+
+<form asp-action="RemoveUserFromGroup" method="post">
+    <div class="form-group">
+        <label asp-for="Group.UserId">Изберете потребител:</label>
+        <select asp-for="Group.UserId" class="form-control">
+            <option value="">Изберете потребител</option>
+            @foreach (var user in users)
+            {
+                <option value="@user.Id">@user.Username</option>
+            }
+        </select>
+        <span asp-validation-for="Group.UserId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Премахване</button>
+</form>

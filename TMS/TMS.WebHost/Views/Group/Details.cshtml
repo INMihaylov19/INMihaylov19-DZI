@@ -1,0 +1,47 @@
+﻿@model TMS.Services.Models.GroupVM
+
+<div class="col-md-8">
+    <div class="card mb-4 box-shadow">
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th>Име</th>
+                    <td>@Model.GroupName</td>
+                </tr>
+                <tr>
+                    <th>Потребители</th>
+                    <td>
+                        <ul>
+                            @foreach (var user in Model.Users)
+                            {
+                                <li>@user.Username</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Възложени задачи</th>
+                    <td>
+                        <ul>
+                            @foreach (var task in Model.Tasks)
+                            {
+                                <li>@task.Name</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group mt-3">
+                    @if (User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
+                    {
+                        <a asp-controller="Group" asp-action="Index" class="btn btn-sm btn-outline-secondary">Главна страница</a>
+                    } else
+                    {
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-secondary">Главна страница</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

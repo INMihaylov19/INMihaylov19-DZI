@@ -1,0 +1,235 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject TMS.Services.Contracts.ICurrentUser currentUser
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TMS.WebHost</title>
+    <link rel="stylesheet" href="~/lib/bootstrap//dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TMS.WebHost.styles.css" asp-append-version="true" />
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#logout').hover(function () {
+            $(this).addClass('text-bg-danger');
+        }, function () {
+            $(this).removeClass('text-bg-danger');
+        });
+    });
+</script>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="/img/logo.png" widh="35" height="35" class="d-inline-block align-top" alt="Logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                @if (User.Identity.IsAuthenticated && User.IsInRole(nameof(TMS.Data.Enums.UserRole.Employer)))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Group" asp-action="Index">Групи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Index">Потребители</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Task" asp-action="Index">Задачи</a>
+                            </li>
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item ms-auto">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none; color: white">
+                                                <img src="/img/icon.png" widh="45" height="45" class="d-inline-block align-top" alt="Logo">
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Details" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/avatar.svg" width="16" height="16" class="me-2">
+                                                        Моят профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Edit" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/edit.png" width="16" height="16" class="me-2">
+                                                        Обнови профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-controller="Account" asp-action="Logout">
+                                                        <button type="submit" class="dropdown-item" id="logout">
+                                                            <img src="/img/log-out.png" width="16" height="16" class="me-2">
+                                                            Излез
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </ul>
+                    </div>
+                }
+                else if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item ms-auto">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none; color: white">
+                                        <img src="/img/icon.png" widh="45" height="45" class="d-inline-block align-top" alt="Logo">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Account" asp-action="Login">
+                                                <img src="/img/login-14.svg" width="16" height="16" class="me-2">
+                                                Вписване
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item logout-link" asp-controller="Account" asp-action="Register">
+                                                <img src="/img/signin.png" width="16" height="16" class="me-2">
+                                                Регистриране
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else if (User.IsInRole(nameof(TMS.Data.Enums.UserRole.Employee)))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="GetGroupsOfCurrentUser">Моите групи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="GetTasksForCurrentUser">Моите задачи</a>
+                            </li>
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item ms-auto">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none; color: white">
+                                                <img src="/img/icon.png" widh="45" height="45" class="d-inline-block align-top" alt="Logo">
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Details" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/avatar.svg" width="16" height="16" class="me-2">
+                                                        Моят профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Edit" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/edit.png" width="16" height="16" class="me-2">
+                                                        Обнови профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-controller="Account" asp-action="Logout">
+                                                        <button type="submit" class="dropdown-item" id="logout">
+                                                            <img src="/img/log-out.png" width="16" height="16" class="me-2">
+                                                            Излез
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </ul>
+                    </div>
+                }
+                else if (User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Index">Управление на потребители</a>
+                            </li>
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item ms-auto">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none; color: white">
+                                                <img src="/img/icon.png" widh="45" height="45" class="d-inline-block align-top" alt="Logo">
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Details" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/avatar.svg" width="16" height="16" class="me-2">
+                                                        Моят профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Edit" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/edit.png" width="16" height="16" class="me-2">
+                                                        Обнови профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-controller="Account" asp-action="Logout">
+                                                        <button type="submit" class="dropdown-item" id="logout">
+                                                            <img src="/img/log-out.png" width="16" height="16" class="me-2">
+                                                            Излез
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </ul>
+                    </div>
+                }
+
+
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-dark bg-opacity-10">
+        <div class="container">
+            &copy; 2024 - TMS.WebHost
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

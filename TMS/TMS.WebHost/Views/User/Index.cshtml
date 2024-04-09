@@ -1,0 +1,192 @@
+﻿@model List<TMS.Services.Models.UserVM>
+
+@{
+    var currentView = "table";
+}
+
+@if(User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-controller="User" asp-action="Create" class="btn btn-sm btn-outline-secondary">Създаване на потребител</a>
+    </p>
+}
+
+@if (TempData["Info"] != null)
+{
+    <div class="col-md-12 alert alert-info">
+        <span><b>Извинете!</b> - @TempData["Info"]</span>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="col-md-12 alert alert-danger">
+        <span><b>Извинете!</b> - @TempData["Error"]</span>
+    </div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var currentView = "@currentView";
+
+        function toggleViews() {
+            if (currentView === "table") {
+                $('#tableView').hide();
+                $('#cardView').show();
+                $('#toggleViewBtn').attr('src', 'img/cardbutton.png');
+                $('#toggleViewBtn').attr('height', '45');
+                $('#toggleViewBtn').attr('width', '45');
+                currentView = "card";
+            } else {
+                $('#tableView').show();
+                $('#cardView').hide();
+                $('#toggleViewBtn').attr('src', 'img/tableview.png');
+                $('#toggleViewBtn').attr('height', '55');
+                $('#toggleViewBtn').attr('width', '55');
+                currentView = "table";
+            }
+        }
+        $('#toggleViewBtn').click(function () {
+            toggleViews();
+        });
+        function performSearch() {
+            var searchText = $('#searchValue').val().toLowerCase();
+            if (currentView === "table") {
+                $('#tableView tbody tr').each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    if (rowText.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            } else {
+                $('#cardView .card').each(function () {
+                    var cardText = $(this).text().toLowerCase();
+                    if (cardText.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        }
+
+        $('#searchValue').keyup(function () {
+            performSearch();
+        });
+
+        if (currentView === "table") {
+            $('#tableView').show();
+            $('#cardView').hide();
+        } else {
+            $('#tableView').hide();
+            $('#cardView').show();
+        }
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-11">
+        @using (Html.BeginForm("Index", "User", FormMethod.Get))
+        {
+            <table>
+                <tr>
+                    <td>
+                        <span><b>Търси по:</b></span>
+                        @Html.RadioButton("searchBy", "Username", true)
+                        <text>Потребителско име</text>
+                        @Html.RadioButton("searchBy", "Firstname", false)
+                        <text>Първо име</text>
+                        @Html.RadioButton("searchBy", "Role", false)
+                        <text>Роля</text>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.TextBox("searchValue", null, new { @class = "form-control", placeholder = "Въведете критерии за търсене" })
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+    <div class="col-md-1">
+        <img id="toggleViewBtn" type="image" src="img/tableview.png" height="55" width="55" style="cursor: pointer" />
+    </div>
+</div>
+
+<table id="tableView" class="table table-secondary table-stripped table-responsive table-hover mt-3">
+    <thead class="thead-dark">
+        <tr>
+            <th> Потребителско име</th>
+            <th> Първо име</th>
+            <th> Роля</th>
+            <th class="d-flex justify-content-center"> Операции </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td> @item.Username </td>
+                <td> @item.FirstName </td>
+                <td> @item.Role </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        @if(User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
+                        {
+                            <a asp-controller="User" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-success m-1">Обновяване</a>
+                            <a asp-controller="User" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger m-1">Изтриване</a>
+                        }
+                        <a asp-controller="User" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info m-1">Детайли</a>
+                        @if (item.Role == TMS.Data.Enums.UserRole.Employee && User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
+                        {
+                            <a asp-controller="Account" asp-action="Authorize" asp-route-id="@item.Id" class="btn btn-sm btn-info m-1">Упълномощаване</a>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="cardView" class="album py-5 bg-light" style="display: none; border-radius: 20px">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-6">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+                            <h5 class="card-title">Потребителско име: @item.Username</h5>
+                            <p class="card-text">
+                                <strong>Първо име:</strong> @item.FirstName <br>
+                                <strong>Роля:</strong> @item.Role <br>
+                            </p>
+                            <p>
+                                <strong>Actions:</strong>
+                                <div class="btn-group">
+                                    @if (User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
+                                    {
+                                        <a asp-controller="User" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-success m-1">Обновяване</a>
+                                        <a asp-controller="User" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger m-1">Изтриване</a>
+                                    }
+                                    <a asp-controller="User" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info m-1">Детайли</a>
+                                    @if (item.Role == TMS.Data.Enums.UserRole.Employee && User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
+                                    {
+                                        <a asp-controller="Account" asp-action="Authorize" asp-route-id="@item.Id" class="btn btn-sm btn-info m-1">Упълномощаване</a>
+                                    }
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+

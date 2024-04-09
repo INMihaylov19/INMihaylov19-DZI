@@ -1,0 +1,18 @@
+﻿@model TMS.WebHost.Models.AssignTaskToGroupVM
+
+<h2>Възложете задача</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Task.GroupId">Изберете група:</label>
+        <select asp-for="Task.GroupId" class="form-control">
+            <option value="">Избери група</option>
+            @foreach (var group in Model.Groups)
+            {
+                <option value="@group.GroupId">@group.GroupName</option>
+            }
+        </select>
+        <span asp-validation-for="Task.GroupId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Възложете задача</button>
+</form>

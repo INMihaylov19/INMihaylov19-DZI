@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center" style="padding-top: 10rem">
+    <p class="display-2">Добре дошли в TMS</p>
+    <p class="lead">Task Management System<br>Управлявай задачите и работниците си с лекота.</p>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <a class="btn btn-outline-primary" style="border-radius: 20px" asp-area="" asp-controller="Account" asp-action="Login">Вписване</a>
+        <a class="btn btn-outline-secondary" style="border-radius: 20px" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
+    }
+</div>

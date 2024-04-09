@@ -1,0 +1,164 @@
+﻿@model TMS.Services.Models.UserVM
+
+@{
+    var currentView = "table";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var currentView = "@currentView";
+
+        function toggleViews() {
+            if (currentView === "table") {
+                $('#tableView').hide();
+                $('#cardView').show();
+                $('#toggleViewBtn').attr('src', '/img/cardbutton.png');
+                $('#toggleViewBtn').attr('height', '45');
+                $('#toggleViewBtn').attr('width', '45');
+                currentView = "card";
+            } else {
+                $('#tableView').show();
+                $('#cardView').hide();
+                $('#toggleViewBtn').attr('src', '/img/tableview.png');
+                $('#toggleViewBtn').attr('height', '55');
+                $('#toggleViewBtn').attr('width', '55');
+                currentView = "table";
+            }
+        }
+        $('#toggleViewBtn').click(function () {
+            toggleViews();
+        });
+        function performSearch() {
+            var searchText = $('#searchValue').val().toLowerCase();
+            if (currentView === "table") {
+                $('#tableView tbody tr').each(function () {
+                    var rowText = $(this).text().toLowerCase();
+                    if (rowText.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            } else {
+                $('#cardView .card').each(function () {
+                    var cardText = $(this).text().toLowerCase();
+                    if (cardText.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        }
+
+        $('#searchValue').keyup(function () {
+            performSearch();
+        });
+
+        if (currentView === "table") {
+            $('#tableView').show();
+            $('#cardView').hide();
+        } else {
+            $('#tableView').hide();
+            $('#cardView').show();
+        }
+    });
+</script>
+<div class="col-md-1">
+    <img id="toggleViewBtn" type="image" src="~/img/tableview.png" height="55" width="55" style="cursor: pointer" />
+</div>
+
+<table id="tableView" class="table table-secondary table-stripped table-responsive table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Име</th>
+            <th>Категория</th>
+            <th>Приоритет</th>
+            <th>Статус</th>
+            <th class="d-flex justify-content-center">Операции</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Tasks)
+        {
+            <tr>
+                <td> @item.Name </td>
+                <td> @item.Category</td>
+                <td> @item.Priority</td>
+                <td> @item.Status</td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <a asp-controller="Task" asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-sm btn-info m-1">Детайли</a>
+                        <form asp-controller="Task" asp-action="MarkTaskAsComplete" method="post">
+                            <input type="hidden" name="taskId" value="@item.TaskId" />
+                            @if (item.Status == TMS.Data.Enums.TaskStatus.InProgress)
+                            {
+                                <button type="submit" class="btn btn-sm btn-danger m-1">Маркиране като завършена</button>
+                            }
+                        </form>
+
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="cardView" class="album py-5 bg-light" style="display: none; border-radius: 20px">
+    <div class="container">
+
+        <div class="row">
+            @foreach (var item in Model.Tasks)
+            {
+                <div class="col-md-6">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 justify-content-center"></div>
+                                    <table class="table table-responsive-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Име:</strong></td>
+                                                <td>@item.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Категория:</strong></td>
+                                                <td>@item.Category</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Приоритет:</strong></td>
+                                                <td>@item.Priority</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Статус:</strong></td>
+                                                <td>@item.Status</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Операции:</strong></td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a asp-controller="Task" asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-sm btn-info m-1">Детайли</a>
+                                                        <form asp-controller="Task" asp-action="MarkTaskAsComplete" method="post">
+                                                            <input type="hidden" name="taskId" value="@item.TaskId" />
+                                                            @if (item.Status == TMS.Data.Enums.TaskStatus.InProgress)
+                                                            {
+                                                                <button type="submit" class="btn btn-sm btn-danger m-1">Маркиране като завършена</button>
+                                                            }
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

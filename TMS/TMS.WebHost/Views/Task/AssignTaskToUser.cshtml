@@ -1,0 +1,27 @@
+﻿@model TMS.WebHost.Models.AssignTaskToUserVM
+
+<h2>Възложете задача</h2>
+
+<form asp-action="AssignTaskToUser" method="post">
+    <div class="form-group">
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Извинете!</b> - @TempData["Error"]</span>
+            </div>
+        }
+        <label asp-for="Task.UserId">Изберете потребител</label>
+        <select asp-for="Task.UserId" class="form-control">
+            <option value="">Изберете потребител</option>
+            @foreach (var user in Model.Users)
+            {
+                if (user.Role == TMS.Data.Enums.UserRole.Employee)
+                {
+                    <option value="@user.Id">@user.Username</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="Task.UserId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Възложете задача</button>
+</form>

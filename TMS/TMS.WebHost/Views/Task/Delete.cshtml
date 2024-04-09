@@ -1,0 +1,25 @@
+﻿@model TMS.Services.Models.TaskVM
+
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="TaskId" />
+
+    <div class="form-group">
+        <label asp-for="Name">Име:</label>
+        <p>@Model.Name</p>
+        <span class="text-info">Сигурни ли сте, че искате да изтриете тази задача?</span>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-danger">Изтриване на задача</button>
+        <a asp-action="Index" class="btn btn-secondary">Откажете</a>
+    </div>
+
+</form>
+
+
+
+
+
+
+

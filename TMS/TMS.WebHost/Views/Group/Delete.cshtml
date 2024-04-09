@@ -1,0 +1,24 @@
+﻿@model TMS.Services.Models.GroupVM
+
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="GroupId" />
+
+    <div class="form-group">
+        <label asp-for="GroupName">Име:</label>
+        <p>@Model.GroupName</p>
+        <span class="text-info">Сигурни ли сте, че искате да изтриете тази задача?</span>
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-danger">Изтриване</button>
+        <a asp-action="Index" class="btn btn-secondary">Отказване</a>
+    </div>
+</form>
+
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+﻿@model TMS.WebHost.Models.Account.LoginVM
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mb-5 box-shadow mt-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-10 offset-md-1">
+                            @if (TempData["Error"] != null)
+                            {
+                                <div class="col-md-12 alert alert-danger">
+                                    <span><b>Извинете!</b> - @TempData["Error"]</span>
+                                </div>
+                            }
+                            <div class="text-center mb-4 mt-5">
+                                <h2>Вписване в акаунт</h2>
+                                <img class="mb-4" src="~/img/avatar.svg" width="72" height="72">
+                            </div>
+                            <form asp-action="Login" method="post">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group">
+                                    @*<label asp-for="Email" id="inputEmail" class="control-label"></label>*@
+                                    <input asp-for="Email" class="form-control p-3" placeholder="Имейл адрес">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mt-3">
+                                    @*<label asp-for="Password" class="control-label"></label>*@
+                                    <input type="password" asp-for="Password" class="form-control p-3" placeholder="Парола">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                    <a class="small text-muted p-2 mt-2" style="text-decoration: none" asp-controller="Account" asp-action="ForgotPassword">Забравена парола?</a>
+                                    <p class="small p-2">Нямате акаунт? <a class="text-muted" style="text-decoration: none" asp-controller="Account" asp-action="Register">Регистриране</a></p>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row mt-3 justify-content-center">
+                                        <input class="btn btn-outline-success col-4 m-1" type="submit" value="Вписване">
+                                        <a class="btn btn-outline-secondary col-4 m-1" asp-controller="Home" asp-action="Index">Откажете</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
