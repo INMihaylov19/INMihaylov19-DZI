@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS.Data.Data;
 
@@ -11,9 +12,11 @@ using TMS.Data.Data;
 namespace TMS.WebHost.Migrations
 {
     [DbContext(typeof(TMSContext))]
-    partial class TMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240503110219_CreatedOn")]
+    partial class CreatedOn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,25 +186,6 @@ namespace TMS.WebHost.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("TMS.Data.Models.Image", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ContentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Data")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Images");
-                });
-
             modelBuilder.Entity("TMS.Data.Models.Task", b =>
                 {
                     b.Property<string>("TaskId")
@@ -271,9 +255,6 @@ namespace TMS.WebHost.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -314,10 +295,6 @@ namespace TMS.WebHost.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique()
-                        .HasFilter("[ImageId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -411,23 +388,9 @@ namespace TMS.WebHost.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TMS.Data.Models.User", b =>
-                {
-                    b.HasOne("TMS.Data.Models.Image", "Image")
-                        .WithOne("User")
-                        .HasForeignKey("TMS.Data.Models.User", "ImageId");
-
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("TMS.Data.Models.Group", b =>
                 {
                     b.Navigation("Tasks");
-                });
-
-            modelBuilder.Entity("TMS.Data.Models.Image", b =>
-                {
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TMS.Data.Models.User", b =>

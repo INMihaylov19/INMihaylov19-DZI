@@ -59,8 +59,10 @@ namespace TMS.WebHost
                 options.AddPolicy("RequiredAdmin", policy => policy.RequireClaim("Permission", "IsAdmin"));
                 options.AddPolicy("RequiredEmployee", policy => policy.RequireClaim("Permission", "IsEmployee"));
                 options.AddPolicy("RequiredEmployer", policy => policy.RequireClaim("Permission", "IsEmployer"));
+                options.AddPolicy("RequiredExEmployee", policy => policy.RequireClaim("Permission", "IsExEmployee "));
                 options.AddPolicy("RequiredEmployeeAdminEmployer", policy => policy.RequireRole(nameof(UserRole.Employee), nameof(UserRole.Admin), nameof(UserRole.Employer)));
                 options.AddPolicy("RequiredAdminEmployer", policy => policy.RequireRole(nameof(UserRole.Admin), nameof(UserRole.Employer)));
+                options.AddPolicy("RequiredExEmployeeEmployer", policy => policy.RequireRole(nameof(UserRole.ExEmployee), nameof(UserRole.Employer)));
             });
 
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -73,6 +75,7 @@ namespace TMS.WebHost
             builder.Services.AddTransient<IEmailSender, EmailService>();
             builder.Services.AddTransient<IPDFDownloader, PDFDownloader>();
             builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+            builder.Services.AddScoped<IImageService, ImageService>();
 
             var app = builder.Build();
 

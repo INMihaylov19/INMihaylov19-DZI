@@ -16,18 +16,21 @@ namespace TMS.WebHost.Controllers
         private readonly UserManager<TMS.Data.Models.User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
+        private readonly IImageService _imageService;
 
         public UserController(IUserService userService,
             IMapper mapper,
             UserManager<TMS.Data.Models.User> userManager,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IImageService imageService)
         {
             _userService = userService;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
             _emailSender = emailSender;
+            _imageService = imageService;
         }
         // GET: UsersController
         [Authorize(Policy = "RequiredAdminEmployer")]
@@ -103,7 +106,8 @@ namespace TMS.WebHost.Controllers
                     LastName = userIM.LastName,
                     UserName = userIM.Username,
                     Email = userIM.Email,
-                    Role = userIM.Role
+                    Role = userIM.Role,
+                    CreatedOn = DateTime.Now
                 };
 
 
@@ -111,6 +115,7 @@ namespace TMS.WebHost.Controllers
                 var adminRoleExists = await _roleManager.RoleExistsAsync(nameof(TMS.Data.Enums.UserRole.Admin));
                 var employeeRoleExists = await _roleManager.RoleExistsAsync(nameof(TMS.Data.Enums.UserRole.Employee));
                 var employerRoleExists = await _roleManager.RoleExistsAsync(nameof(TMS.Data.Enums.UserRole.Employer));
+                var exEmployeeRoleExists = await _roleManager.RoleExistsAsync(nameof(TMS.Data.Enums.UserRole.ExEmployee));
 
                 if (!adminRoleExists)
                 {
@@ -125,6 +130,11 @@ namespace TMS.WebHost.Controllers
                 if (!employerRoleExists)
                 {
                     await _roleManager.CreateAsync(new IdentityRole(nameof(TMS.Data.Enums.UserRole.Employer)));
+                }
+
+                if (!exEmployeeRoleExists)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(nameof(TMS.Data.Enums.UserRole.ExEmployee)));
                 }
 
                 var userExists = await _userManager.FindByEmailAsync(user.Email);
@@ -172,6 +182,15 @@ namespace TMS.WebHost.Controllers
                         if (!_userService.HasClaim(claimEmployer.Type, claimEmployer.Value))
                         {
                             await _roleManager.AddClaimAsync(roleEmployer, claimEmployer);
+                        }
+                        break;
+                   case TMS.Data.Enums.UserRole.ExEmployee:
+                        await _userManager.AddToRoleAsync(user, nameof(TMS.Data.Enums.UserRole.ExEmployee));
+                        var claimExEmployee = new Claim("Permission", "IsExEmployee");
+                        var roleExEmployee = await _roleManager.FindByNameAsync(nameof(TMS.Data.Enums.UserRole.ExEmployee));
+                        if (!_userService.HasClaim(claimExEmployee.Type, claimExEmployee.Value))
+                        {
+                            await _roleManager.AddClaimAsync(roleExEmployee, claimExEmployee);
                         }
                         break;
                     default:
@@ -290,6 +309,29 @@ namespace TMS.WebHost.Controllers
                 return View("Error");
             }
             return View(user);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "RequiredAdminEmployer")]
+        public async Task<IActionResult> DaysSinceRegistration(string id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+
+            return View(user);
+        }
+
+        public async Task<IActionResult> GetImage(string imageId)
+        {
+            try
+            {
+                var image = await _imageService.GetImageDataAsync(imageId);
+                return File(image, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iTextSharp.text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -17,5 +18,7 @@ namespace TMS.Services.Models
         public List<TaskVM>? Tasks { get; set; }
         public List<GroupVM>? Groups { get; set; }
         public TMS.Data.Enums.UserRole? Role { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string ImageId { get; set; }
     }
 }

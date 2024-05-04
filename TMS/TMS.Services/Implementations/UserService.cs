@@ -169,5 +169,18 @@ namespace TMS.Services.Implementations
                 .RoleClaims
                 .Any(c => c.ClaimType == claimType && c.ClaimValue == claimValue);
         }
+
+        public async Task<int> DaysSinceRegistrationAsync(string userId)
+        {
+            var userVM = _context
+                .Users
+                .Where(u => u.Id == userId)
+                .ProjectTo<UserVM>(_mapper.ConfigurationProvider)
+                .FirstOrDefault();
+
+            var daysSinceRegistration = DateTime.Now.Day - userVM.CreatedOn.Day;
+
+            return daysSinceRegistration;
+        }
     }
 }

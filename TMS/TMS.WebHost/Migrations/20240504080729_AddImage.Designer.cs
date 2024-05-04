@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TMS.Data.Data;
 
@@ -11,9 +12,11 @@ using TMS.Data.Data;
 namespace TMS.WebHost.Migrations
 {
     [DbContext(typeof(TMSContext))]
-    partial class TMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240504080729_AddImage")]
+    partial class AddImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,7 +200,14 @@ namespace TMS.WebHost.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Images");
                 });
@@ -271,9 +281,6 @@ namespace TMS.WebHost.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -314,10 +321,6 @@ namespace TMS.WebHost.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique()
-                        .HasFilter("[ImageId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -396,6 +399,15 @@ namespace TMS.WebHost.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TMS.Data.Models.Image", b =>
+                {
+                    b.HasOne("TMS.Data.Models.User", "User")
+                        .WithOne("Image")
+                        .HasForeignKey("TMS.Data.Models.Image", "UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TMS.Data.Models.Task", b =>
                 {
                     b.HasOne("TMS.Data.Models.Group", "Group")
@@ -411,27 +423,15 @@ namespace TMS.WebHost.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TMS.Data.Models.User", b =>
-                {
-                    b.HasOne("TMS.Data.Models.Image", "Image")
-                        .WithOne("User")
-                        .HasForeignKey("TMS.Data.Models.User", "ImageId");
-
-                    b.Navigation("Image");
-                });
-
             modelBuilder.Entity("TMS.Data.Models.Group", b =>
                 {
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("TMS.Data.Models.Image", b =>
-                {
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TMS.Data.Models.User", b =>
                 {
+                    b.Navigation("Image");
+
                     b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TMS.Data.Models;
 
 namespace TMS.WebHost.Models.Account
 {
@@ -35,5 +36,9 @@ namespace TMS.WebHost.Models.Account
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Паролата не съвпада")]
         public string? ConfirmPassword { get; set; }
+
+        [Display(Name = "Снимка")]
+        [Required(ErrorMessage = "Снимката е задължителна")]
+        public IFormFile Image { get; set; }
     }
 }

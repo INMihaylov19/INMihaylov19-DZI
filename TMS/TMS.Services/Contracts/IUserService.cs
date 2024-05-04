@@ -17,5 +17,6 @@ namespace TMS.Services.Contracts
         UserVM GetTasksFofCurrentUserAsync();
         UserVM GetGroupsOfCurrentUser();
         bool HasClaim(string claimType, string claimValue);
+        Task<int> DaysSinceRegistrationAsync(string userId);
     }
 }

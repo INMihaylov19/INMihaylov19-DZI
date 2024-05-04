@@ -25,13 +25,15 @@ namespace TMS.WebHost.Controllers
         private readonly IEmailSender _emailSender;
         private readonly SignInManager<TMS.Data.Models.User> _signInManager;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageService;
 
         public AccountController(UserManager<TMS.Data.Models.User> userManager,
             IUserService userService,
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
             SignInManager<Data.Models.User> signInManager,
-            IMapper mapper)
+            IMapper mapper,
+            IImageService imageService)
         {
             _userManager = userManager;
             _userService = userService;
@@ -39,6 +41,7 @@ namespace TMS.WebHost.Controllers
             _emailSender = emailSender;
             _signInManager = signInManager;
             _mapper = mapper;
+            _imageService = imageService;
         }
 
         [HttpGet]
@@ -130,12 +133,16 @@ namespace TMS.WebHost.Controllers
                 return View(registerVM);
             }
 
+            var imageId = await _imageService.UploadImageAsync(registerVM.Image, registerVM.UserName);
+
             var newUser = new TMS.Data.Models.User()
             {
                 FirstName = registerVM.FirstName,
                 LastName = registerVM.LastName,
                 Email = registerVM.Email,
                 UserName = registerVM.UserName,
+                CreatedOn = DateTime.Now,
+                ImageId = imageId
             };
 
             var isUserFirst = _userService.GetAllUsersAsync().Result.Count == 0;

@@ -1,7 +1,12 @@
-﻿<div class="col-md-8">
+﻿@model TMS.Services.Models.UserVM
+
+<div class="col-md-8">
     <div class="card mb-4 box-shadow">
         <div class="card-body">
             <table class="table">
+                <tr>
+                    <th>Профилна снимка</th>
+                    <td><img src="@Url.Action("GetImage", "User", new { imageId = Model.ImageId}) "width="70" height="70"/></td>
                 <tr>
                     <th>Първо име</th>
                     <td>@Model.FirstName</td>
@@ -26,10 +31,10 @@
                     <th>Възложени задачи</th>
                     <td>
                         <ul>
-                            @foreach (var task in Model.Tasks)
-                            {
+                                @foreach (var task in Model.Tasks)
+                                {
                                 <li>@task.Name</li>
-                            }
+                                }
                         </ul>
                     </td>
                 </tr>

@@ -140,6 +140,7 @@
                             <a asp-controller="User" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-success m-1">Обновяване</a>
                             <a asp-controller="User" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger m-1">Изтриване</a>
                         }
+                        <a asp-controller="User" asp-action="DaysSinceRegistration" asp-route-id="@item.Id" class="btn btn-sm btn-warning m-1">Дати</a>
                         <a asp-controller="User" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info m-1">Детайли</a>
                         @if (item.Role == TMS.Data.Enums.UserRole.Employee && User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
                         {
@@ -173,6 +174,7 @@
                                         <a asp-controller="User" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-success m-1">Обновяване</a>
                                         <a asp-controller="User" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger m-1">Изтриване</a>
                                     }
+                                    <a asp-controller="User" asp-action="DaysSinceRegistration" asp-route-id="@item.Id" class="btn btn-sm btn-warning m-1">Дати</a>
                                     <a asp-controller="User" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info m-1">Детайли</a>
                                     @if (item.Role == TMS.Data.Enums.UserRole.Employee && User.IsInRole(nameof(TMS.Data.Enums.UserRole.Admin)))
                                     {

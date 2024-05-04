@@ -208,6 +208,52 @@
                         </ul>
                     </div>
                 }
+                else if (User.IsInRole(nameof(TMS.Data.Enums.UserRole.ExEmployee)))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Task" asp-action="Index">Задачи</a>
+                            </li>
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item ms-auto">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none; color: white">
+                                                <img src="/img/icon.png" widh="45" height="45" class="d-inline-block align-top" alt="Logo">
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Details" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/avatar.svg" width="16" height="16" class="me-2">
+                                                        Моят профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="User" asp-action="Edit" asp-route-id="@currentUser.Id">
+                                                        <img src="/img/edit.png" width="16" height="16" class="me-2">
+                                                        Обнови профил
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <form method="post" asp-controller="Account" asp-action="Logout">
+                                                        <button type="submit" class="dropdown-item" id="logout">
+                                                            <img src="/img/log-out.png" width="16" height="16" class="me-2">
+                                                            Излез
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </ul>
+                    </div>
+                }
 
 
             </div>

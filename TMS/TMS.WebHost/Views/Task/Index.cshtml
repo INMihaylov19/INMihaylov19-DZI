@@ -4,9 +4,12 @@
     var currentView = "table";
 }
 
-<p>
-    <a asp-controller="Task" asp-action="Create" class="btn btn-sm btn-outline-secondary">Създаване на задача</a>
-</p>
+@if (User.IsInRole("Employer"))
+{
+    <p>
+        <a asp-controller="Task" asp-action="Create" class="btn btn-sm btn-outline-secondary">Създаване на задача</a>
+    </p>
+}
 
 @if (TempData["Info"] != null)
 {
@@ -134,16 +137,25 @@
                 <td> @item.Priority</td>
                 <td> @item.Status</td>
                 <td>
-                    <div class="d-flex justify-content-center">
-                        <a asp-controller="Task" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-sm btn-success m-1">Обновяване</a>
-                        <a asp-controller="Task" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-sm btn-danger m-1">Изтриване</a>
-                        <a asp-controller="Task" asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-sm btn-info m-1">Детайли</a>
-                        @if (item.Status == TMS.Data.Enums.TaskStatus.InProgress)
-                        {
-                        <a asp-controller="Task" asp-action="AssignTaskToUser" asp-route-id="@item.TaskId" class="btn btn-sm btn-warning m-1">Възлагане на потребител</a>
-                        <a asp-controller="Task" asp-action="AssignTaskToGroup" asp-route-id="@item.TaskId" class="btn btn-sm btn-primary m-1">Възлагане на група</a>
-                        }
-                    </div>
+                    @if (User.IsInRole("ExEmployee"))
+                    {
+                        <div class="d-flex justify-content-around">
+                            <a asp-controller="Task" asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-sm btn-info m-1">Детайли</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex justify-content-center">
+                            <a asp-controller="Task" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-sm btn-success m-1">Обновяване</a>
+                            <a asp-controller="Task" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-sm btn-danger m-1">Изтриване</a>
+                            <a asp-controller="Task" asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-sm btn-info m-1">Детайли</a>
+                            @if (item.Status == TMS.Data.Enums.TaskStatus.InProgress)
+                            {
+                                <a asp-controller="Task" asp-action="AssignTaskToUser" asp-route-id="@item.TaskId" class="btn btn-sm btn-warning m-1">Възлагане на потребител</a>
+                                <a asp-controller="Task" asp-action="AssignTaskToGroup" asp-route-id="@item.TaskId" class="btn btn-sm btn-primary m-1">Възлагане на група</a>
+                            }
+                        </div>
+                    }
                 </td>
             </tr>
         }
@@ -172,6 +184,16 @@
                                     <strong>Операции:</strong>
                                 </div>
                             </div>
+                            @if (User.IsInRole("ExEmployee"))
+                            {
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-controller="Task" asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-info m-1">Детайли</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            } else {
                             <div class="row">
                                 <div class="col">
                                     <div class="btn-group btn-group-sm">
@@ -189,6 +211,7 @@
                                     </div>
                                 </div>
                             </div>
+                            }
                         </div>
                     </div>
                 </div>

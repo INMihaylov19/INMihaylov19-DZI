@@ -1,0 +1,28 @@
+﻿@model TMS.Services.Models.UserVM
+@inject TMS.Services.Contracts.IUserService userService
+
+@{
+    var daysSinceRegistration = userService.DaysSinceRegistrationAsync(Model.Id).Result;
+}
+
+<div class="col-md-8">
+    <div class="card mb-4 box-shadow">
+        <div class="card-body">
+            <table class="table">
+                <tr>
+                    <th>Дата на регистриране</th>
+                    <td>@Model.CreatedOn</td>
+                </tr>
+                <tr>
+                    <th>Дни от регистрацията</th>
+                    <td>@daysSinceRegistration</td>
+                </tr>
+            </table>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group mt-3">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-outline-secondary">Главна страница</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -10,5 +10,8 @@ namespace TMS.Data.Models
         public UserRole? Role { get; set; }
         public ICollection<Task>? Tasks { get; set; }
         public ICollection<Group>? Groups { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string? ImageId { get; set; }
+        public Image? Image { get; set; }
     }
 }

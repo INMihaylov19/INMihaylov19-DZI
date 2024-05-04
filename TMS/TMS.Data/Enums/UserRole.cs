@@ -5,6 +5,7 @@ namespace TMS.Data.Enums
     {
         Employee,
         Employer,
-        Admin
+        Admin,
+        ExEmployee
     }
 }

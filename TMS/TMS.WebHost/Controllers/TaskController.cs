@@ -37,7 +37,7 @@ namespace TMS.WebHost.Controllers
         }
 
         // GET: TasksController
-        [Authorize(Policy = "RequiredEmployer")]
+        [Authorize(Policy = "RequiredExEmployeeEmployer")]
         public async Task<IActionResult> Index(string searchBy, string searchValue)
         {
             var tasks = await _taskService.GetAllTasksAsync();
