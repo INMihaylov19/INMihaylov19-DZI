@@ -31,5 +31,9 @@ namespace TMS.WebHost.Models
 
         [Required(ErrorMessage = "Ролята е задължителна")]
         public UserRole Role { get; set; }
+
+        [Display(Name = "Снимка")]
+        [Required(ErrorMessage = "Снимката е задължителна")]
+        public IFormFile Image { get; set; }
     }
 }

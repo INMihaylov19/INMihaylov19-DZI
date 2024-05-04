@@ -99,6 +99,7 @@ namespace TMS.WebHost.Controllers
         {
             try
             {
+                var imageId = await _imageService.UploadImageAsync(userIM.Image, userIM.Username);
 
                 var user = new TMS.Data.Models.User
                 {
@@ -107,7 +108,8 @@ namespace TMS.WebHost.Controllers
                     UserName = userIM.Username,
                     Email = userIM.Email,
                     Role = userIM.Role,
-                    CreatedOn = DateTime.Now
+                    CreatedOn = DateTime.Now,
+                    ImageId = imageId
                 };
 
 
